@@ -12,7 +12,7 @@
 ## Быстрая установка
 ```bash
 # Скачать и запустить
-curl -sL https://raw.githubusercontent.com/ВАШ_НИК/nerop-installer/main/nerop-installer.py | python3
+curl -sL https://raw.githubusercontent.com/nerop_nerop/nerop-installer/main/nerop-installer.py | python3
 
 # Или клонировать репозиторий
 git clone https://github.com/ВАШ_НИК/nerop-installer.git
