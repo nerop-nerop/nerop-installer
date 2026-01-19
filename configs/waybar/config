@@ -1,0 +1,92 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 30,
+  "spacing": 4,
+  
+  "modules-left": ["hyprland/workspaces", "hyprland/window"],
+  "modules-center": ["clock"],
+  "modules-right": ["pulseaudio", "network", "cpu", "memory", "temperature", "battery", "tray"],
+  
+  "hyprland/workspaces": {
+    "format": "{icon}",
+    "on-click": "activate",
+    "active-only": false,
+    "format-icons": {
+      "1": "一",
+      "2": "二",
+      "3": "三",
+      "4": "四",
+      "5": "五",
+      "6": "六",
+      "7": "七",
+      "8": "八",
+      "9": "九",
+      "10": "十"
+    }
+  },
+  
+  "clock": {
+    "format": "{:%H:%M\n%d.%m.%Y}",
+    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+    "interval": 1
+  },
+  
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-muted": "🔇",
+    "format-icons": {
+      "headphones": "󰋋",
+      "hands-free": "󰋎",
+      "headset": "󰋎",
+      "phone": "󰏲",
+      "portable": "󰂄",
+      "car": "󰄋",
+      "default": ["󰕿", "󰖀", "󰕾"]
+    },
+    "scroll-step": 5,
+    "on-click": "pavucontrol"
+  },
+  
+  "network": {
+    "format-wifi": "󰖩 {essid}",
+    "format-ethernet": "󰈀 {ifname}",
+    "format-disconnected": "󰖪 No connection",
+    "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
+    "on-click": "nm-connection-editor"
+  },
+  
+  "cpu": {
+    "format": "󰻠 {usage}%",
+    "interval": 5
+  },
+  
+  "memory": {
+    "format": "󰍛 {percentage}%",
+    "interval": 5
+  },
+  
+  "temperature": {
+    "thermal-zone": 0,
+    "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
+    "format": " {temperatureC}°C",
+    "critical-threshold": 80
+  },
+  
+  "battery": {
+    "states": {
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{icon} {capacity}%",
+    "format-charging": "󰂄 {capacity}%",
+    "format-plugged": "󰚥 {capacity}%",
+    "format-alt": "{time} {icon}",
+    "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+  },
+  
+  "tray": {
+    "spacing": 10,
+    "icon-size": 16
+  }
+}
