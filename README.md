@@ -11,7 +11,7 @@ nerop-installer/      - Основная папка с установщиком 
 bash
 
 git clone https://github.com/nerop-nerop/nerop-installer.git
-cd nerop-installer
+cd nerop-installer, и после того как перешли ещё раз пишете cd nerop-installer
 
 Запуск установщика:
 bash
