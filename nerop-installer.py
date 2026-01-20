@@ -1,14 +1,44 @@
 #!/usr/bin/env python3
 """
-NEROP Installer - Полная версия
+NEROP Installer - Полная версия с автоматической установкой зависимостей
 """
 
 import subprocess
 import sys
 import os
 import shutil
-import requests
+import importlib.util
 from pathlib import Path
+
+def check_and_install_requests():
+    """Проверяет и устанавливает модуль requests если нужно"""
+    print("🔍 Проверка зависимостей Python...")
+    
+    # Проверяем наличие модуля requests
+    if importlib.util.find_spec("requests") is None:
+        print("   Установка python-requests...")
+        # Устанавливаем через pacman
+        result = subprocess.run(
+            "sudo pacman -S --noconfirm python-requests",
+            shell=True,
+            check=False,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+        if result.returncode == 0:
+            print("   ✅ python-requests установлен")
+            # Теперь импортируем requests
+            global requests
+            import requests
+            return True
+        else:
+            print("   ❌ Не удалось установить python-requests")
+            print("   💡 Установите вручную: sudo pacman -S python-requests")
+            return False
+    else:
+        print("   ✅ requests уже установлен")
+        import requests
+        return True
 
 def print_logo():
     print(r"""
@@ -88,11 +118,10 @@ def install_pycharm():
     """Устанавливает PyCharm из AUR"""
     print("\n   Установка PyCharm...")
     
-    # Попробуем разные варианты пакетов PyCharm из AUR
     pycharm_versions = [
-        "pycharm-community-edition",  # Бесплатная версия
-        "pycharm-professional",       # Профессиональная версия
-        "pycharm-community-bin"       # Бинарная версия
+        "pycharm-community-edition",
+        "pycharm-professional",
+        "pycharm-community-bin"
     ]
     
     for pkg in pycharm_versions:
@@ -159,14 +188,17 @@ def install_yandex_music():
     # Если AUR не сработал, установим напрямую из GitHub
     print("   Установка из GitHub...")
     
-    # Создаем директорию для AppImage
-    appimage_dir = Path.home() / "Applications"
-    appimage_dir.mkdir(exist_ok=True)
-    
-    # URL для Яндекс.Музыки (последняя версия)
-    yandex_url = "https://github.com/AppImage/appimage.github.io/raw/master/database/yandex-music-desktop"
-    
     try:
+        # Импортируем requests (он уже должен быть установлен)
+        import requests
+        
+        # Создаем директорию для AppImage
+        appimage_dir = Path.home() / "Applications"
+        appimage_dir.mkdir(exist_ok=True)
+        
+        # URL для Яндекс.Музыки (последняя версия)
+        yandex_url = "https://github.com/AppImage/appimage.github.io/raw/master/database/yandex-music-desktop"
+        
         print("   Скачивание Яндекс.Музыки...")
         response = requests.get(yandex_url, stream=True)
         if response.status_code == 200:
@@ -200,6 +232,7 @@ Categories=Audio;Music;
         print(f"   ❌ Ошибка при установке из GitHub: {e}")
     
     print("   ⚠️  Не удалось установить Яндекс.Музыку")
+    print("   💡 Попробуйте установить вручную: yay -S yandex-music-desktop-bin")
     return False
 
 def main():
@@ -210,10 +243,20 @@ def main():
         print("❌ Не запускайте скрипт от root! Используйте обычного пользователя.")
         sys.exit(1)
     
+    # Проверяем и устанавливаем requests
+    if not check_and_install_requests():
+        print("❌ Не удалось установить необходимые зависимости.")
+        print("💡 Установите вручную: sudo pacman -S python-requests")
+        sys.exit(1)
+    
     print("\nЭтот скрипт установит/обновит NEROP окружение.")
     print("Уже установленные пакеты будут пропущены.\n")
     
-    input("Нажмите Enter для продолжения или Ctrl+C для отмены...")
+    try:
+        input("Нажмите Enter для продолжения или Ctrl+C для отмены...")
+    except KeyboardInterrupt:
+        print("\n\n❌ Установка прервана")
+        sys.exit(1)
     
     # 1. Обновление системы
     print("\n1. ОБНОВЛЕНИЕ СИСТЕМЫ")
@@ -249,7 +292,8 @@ def main():
         "polkit-kde-agent", "network-manager-applet",
         "pavucontrol", "bluez", "bluez-utils", "blueman",
         "slurp", "grim", "wl-clipboard",
-        "discord", "obs-studio", "gimp", "inkscape"
+        "discord", "obs-studio", "gimp", "inkscape",
+        "python-requests"  # На всякий случай еще раз
     ]
     
     run_cmd(f"pacman -S --needed --noconfirm {' '.join(official_packages)}", 
