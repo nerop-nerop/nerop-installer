@@ -17,7 +17,7 @@ cd nerop-installer
 bash
 
 cd nerop-installer
-./install.sh
+./nerop-installer.py
 
 Возможности
 
