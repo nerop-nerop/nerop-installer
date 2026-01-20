@@ -8,7 +8,7 @@ nerop-installer/      - Основная папка с установщиком 
 
 Установка
 Быстрая установка:
-bash
+curl -sSL https://raw.githubusercontent.com/nerop-nerop/nerop-installer/main/nerop-installer/nerop-installer.py | python3
 
 git clone https://github.com/nerop-nerop/nerop-installer.git
 cd nerop-installer, и после того как перешли ещё раз пишете cd nerop-installer
